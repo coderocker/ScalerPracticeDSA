@@ -25,5 +25,35 @@ public class PowerRecursive {
         return number1 + multiply(number1, number2-1);
     }
 
+    // With log(N) complexity
+    private static int powerOp(int a, int N) {
+        if(N == 0) {
+            return 1;
+        }
+
+        int he = powerOp(a, N/2);
+        int ha = he * he;
+
+        if((N % 2) == 0) {
+            return ha;
+        } else {
+            return ha * a;
+        }
+    }
+
+    private static long powerOpMod(int a, int N, int p) {
+        if(N == 0) {
+            return 1;
+        }
+
+        long he = powerOp(a, N/2);
+        long ha = ((he % p) * (he % p)) % p;
+
+        if((N % 2) == 0) {
+            return ha;
+        } else {
+            return ((ha % p) * (a % p)) % p;
+        }        
+    }
 
 }
