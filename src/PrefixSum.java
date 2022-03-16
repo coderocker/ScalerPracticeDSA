@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class PrefixSum {
     public static void main(String[] args) {
@@ -124,5 +125,77 @@ public class PrefixSum {
         }
 
         return minIndex;
+    }
+
+    private static int[] buildArrayWithQueries(int N, int[][] Q) {
+        int[] A = new int[N];
+
+        for(int i=0; i < Q.length; i++) {
+            int index = Q[i][0];
+            int value = Q[i][1];
+            A[index] += value;
+        }
+
+        // Pfsum
+        for (int i=1; i < N; i ++) {
+            A[i] += A[i-1] + A[i];
+        }
+
+        return A;
+    }
+
+    private static int[] buildArrayWithQueriesStEnd(int N, int[][] Q) {
+        int[] A = new int[N];
+
+        for(int i=0; i < Q.length; i++) {
+            int stIndex = Q[i][0];
+            int endIndex = Q[i][1];
+            int value = Q[i][2];
+            A[stIndex] += value;
+            A[endIndex + 1] -= value;
+        }
+
+        // Pfsum
+        for (int i=1; i < N; i ++) {
+            A[i] += A[i-1] + A[i];
+        }
+
+        return A;
+    }
+
+    // Prefix max
+    private static int[] prefixMax(int[] A) {
+        int max = A[0];
+        for (int i = 1; i < A.length; i++) {
+            max = Math.max(max, A[i]);
+            A[i] = max;
+        }
+
+        return A;
+    }
+
+    // Sufix max
+    private static int[] suffixMax(int[] A) {
+        int N = A.length;
+        int max = A[N-1];
+        for (int i = N-2; i >= 0; i--) {
+            max = Math.max(max, A[i]);
+            A[i] = max;
+        }
+
+        return A;
+    }
+
+    // water accumulated on building problems
+    private static int totalWater(int[] A, int N) {
+        int[] prefixMax = prefixMax(A);
+        int[] suffixMax = suffixMax(A);
+
+        int totalWater = 0;
+        // Starts with 1 and ends before N-1 because no water will be accumulated on corner buildings
+        for (int i = 1; i < N-1; i++) {
+            totalWater += Math.min(prefixMax[i-1], suffixMax[i+1]) - A[i];
+        }
+        return totalWater;
     }
 }

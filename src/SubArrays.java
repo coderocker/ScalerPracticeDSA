@@ -65,13 +65,15 @@ public class SubArrays {
 //        return maxSum;
 //    }
 
-
+    // Kadanes Algo
     private static int maxSumOfSubArray(final int[] A) {
         int maxSum = Integer.MIN_VALUE;
         int sum =0;
         for (int i = 0; i < A.length; i++) {
             sum += A[i];
             maxSum = Math.max(maxSum, sum);
+
+            // Reset value to 0 if sum is -ve
             if(sum < 0) {
                 sum =0;
             }
